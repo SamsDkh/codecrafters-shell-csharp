@@ -7,15 +7,23 @@ class Program
         {
            Console.Write("$ ");
             var prompt = Console.ReadLine();
-            if (string.IsNullOrEmpty(prompt))
+            if(prompt.StartsWith("echo "))
             {
+                Console.WriteLine($"{prompt.Substring(5)}");
                 continue;
             }
             else
             {
-                if (prompt == "exit 0")
-                    break;
-                Console.WriteLine($"{prompt}: command not found");
+                switch(prompt)
+                {
+                    case "exit 0":
+                        return;
+                    case "":
+                        continue;
+                    default:
+                        Console.WriteLine($"{prompt}: command not found");
+                        continue;
+                }
             }
         }
     }
