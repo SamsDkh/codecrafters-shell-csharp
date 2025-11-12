@@ -12,6 +12,17 @@ class Program
                 Console.WriteLine($"{prompt.Substring(5)}");
                 continue;
             }
+            if(prompt.StartsWith("type "))
+            {
+                var command = prompt.Substring(5);
+                if(command == "echo" 
+                || command == "type")
+                {
+                    Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
+                    continue;
+                }
+                Console.WriteLine("invalid_command: not found");
+            }
             else
             {
                 switch(prompt)
