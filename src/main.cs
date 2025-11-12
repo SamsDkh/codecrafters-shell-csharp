@@ -22,7 +22,7 @@ class Program
                     Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
                     continue;
                 }
-                Console.WriteLine("invalid_command: not found");
+                Console.WriteLine($"{command}: not found");
             }
             else
             {
