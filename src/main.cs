@@ -7,7 +7,16 @@ class Program
         {
            Console.Write("$ ");
             var prompt = Console.ReadLine();
-            Console.WriteLine($"{prompt}: command not found");
+            if (string.IsNullOrEmpty(prompt))
+            {
+                continue;
+            }
+            else
+            {
+                if (prompt == "exit 0")
+                    break;
+                Console.WriteLine($"{prompt}: command not found");
+            }
         }
     }
 }
