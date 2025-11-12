@@ -16,7 +16,8 @@ class Program
             {
                 var command = prompt.Substring(5);
                 if(command == "echo" 
-                || command == "type")
+                || command == "type"
+                || command == "exit")
                 {
                     Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
                     continue;
