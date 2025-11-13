@@ -22,7 +22,53 @@ class Program
                     Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
                     continue;
                 }
-                Console.WriteLine($"{command}: not found");
+                var path = Environment.GetEnvironmentVariable("PATH");
+                // var path = @"dir1:\\dir2:\\dir3;";
+                if(string.IsNullOrEmpty(path))
+                {
+                    Console.WriteLine($"{command}: not found");
+                    continue;
+                }
+                var execFound = false;
+                var Searched = false;
+                HashSet<string> searched = [];
+                foreach (var dir in path.Split(';'))
+                {
+                    var subDir = string.Empty;
+                    if(string.IsNullOrEmpty(dir))
+                        break;
+                    Console.WriteLine("dir : "+dir);
+                    foreach (var item in dir.Split("\\"))
+                    {
+                        if(string.IsNullOrEmpty(item))
+                            break;
+                        var currentItem = item.TrimEnd('\\');
+                        subDir += string.Format(@"{0}\",currentItem);
+                        var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
+                        // if(searched.Contains(pathCommand))
+                        // {
+                        //     Searched = true;
+                        //     break;
+                        // }
+                        // searched.Add(pathCommand);
+                        // Console.WriteLine(pathCommand);
+                        execFound = File.Exists(pathCommand);
+                        if(execFound)
+                        {
+                            Console.WriteLine($"{command} is {pathCommand}");
+                            break;
+                        }
+                    }
+                    if(execFound || Searched)
+                        break;
+                }
+                if(!execFound)
+                    Console.WriteLine($"{command}: not found");
+                Console.WriteLine("Searched in : ");
+                foreach (var s in searched)
+                {
+                    Console.WriteLine(s);
+                }
             }
             else
             {
