@@ -35,7 +35,7 @@ class Program
                 var directorySeparator = Path.DirectorySeparatorChar;
                 foreach (var dir in path.Split(pathSeparator))
                 {
-                    Console.WriteLine(dir);
+                    // Console.WriteLine(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
