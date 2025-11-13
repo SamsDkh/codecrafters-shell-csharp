@@ -42,7 +42,7 @@ class Program
                             break;
                         var currentItem = item.TrimEnd('\\');
                         subDir += string.Format(@"{0}\",currentItem);
-                        var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
+                        var pathCommand = string.Format(@"{0}{1}",subDir,command);
                         // if(searched.Contains(pathCommand))
                         // {
                         //     Searched = true;
