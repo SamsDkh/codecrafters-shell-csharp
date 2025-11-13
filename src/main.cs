@@ -57,7 +57,7 @@ class Program
                             break;
                         }
                     }
-                    if(execFound || Searched)
+                    if(execFound)
                         break;
                 }
                 if(!execFound)
