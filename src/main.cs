@@ -47,7 +47,7 @@ class Program
                         var currentItem = item.TrimEnd(directorySeparator);
                         subDir += string.Format(@"{0}{1}",currentItem,directorySeparator);
                         var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
-                        Console.WriteLine("pathCommand :"+pathCommand);
+                        // Console.WriteLine("pathCommand :"+pathCommand);
                         // if(searched.Contains(pathCommand))
                         // {
                         //     Searched = true;
