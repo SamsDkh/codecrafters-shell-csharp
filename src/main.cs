@@ -23,7 +23,6 @@ class Program
                     continue;
                 }
                 var path = Environment.GetEnvironmentVariable("PATH");
-                // var path = @"dir1:\\dir2:\\dir3;";
                 if(string.IsNullOrEmpty(path))
                 {
                     Console.WriteLine($"{command}: not found");
@@ -37,7 +36,6 @@ class Program
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
-                    Console.WriteLine("dir : "+dir);
                     foreach (var item in dir.Split("\\"))
                     {
                         if(string.IsNullOrEmpty(item))
