@@ -36,12 +36,12 @@ class Program
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
-                    foreach (var item in dir.Split("\\"))
+                    foreach (var item in dir.Split("/"))
                     {
                         if(string.IsNullOrEmpty(item))
                             break;
-                        var currentItem = item.TrimEnd('\\');
-                        subDir += string.Format(@"{0}\",currentItem);
+                        var currentItem = item.TrimEnd('/');
+                        subDir += string.Format(@"{0}/",currentItem);
                         var pathCommand = string.Format(@"{0}{1}",subDir,command);
                         // if(searched.Contains(pathCommand))
                         // {
