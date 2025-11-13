@@ -31,19 +31,21 @@ class Program
                 var execFound = false;
                 var Searched = false;
                 HashSet<string> searched = [];
-                foreach (var dir in path.Split(';'))
+                var pathSeparator = Path.PathSeparator;
+                var directorySeparator = Path.DirectorySeparatorChar;
+                foreach (var dir in path.Split(pathSeparator))
                 {
                     Console.WriteLine(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
-                    foreach (var item in dir.Split("/"))
+                    foreach (var item in dir.Split(directorySeparator))
                     {
                         if(string.IsNullOrEmpty(item))
                             break;
                         Console.WriteLine(item);
-                        var currentItem = item.TrimEnd('/');
-                        subDir += string.Format(@"{0}/",currentItem);
+                        var currentItem = item.TrimEnd(directorySeparator);
+                        subDir += string.Format(@"{0}{1}",currentItem,directorySeparator);
                         var pathCommand = string.Format(@"{0}{1}",subDir,command);
                         // if(searched.Contains(pathCommand))
                         // {
