@@ -33,6 +33,7 @@ class Program
                 HashSet<string> searched = [];
                 foreach (var dir in path.Split(';'))
                 {
+                    Console.WriteLine(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
@@ -40,6 +41,7 @@ class Program
                     {
                         if(string.IsNullOrEmpty(item))
                             break;
+                        Console.WriteLine(item);
                         var currentItem = item.TrimEnd('/');
                         subDir += string.Format(@"{0}/",currentItem);
                         var pathCommand = string.Format(@"{0}{1}",subDir,command);
