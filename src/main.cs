@@ -62,11 +62,11 @@ class Program
                 }
                 if(!execFound)
                     Console.WriteLine($"{command}: not found");
-                Console.WriteLine("Searched in : ");
-                foreach (var s in searched)
-                {
-                    Console.WriteLine(s);
-                }
+                // Console.WriteLine("Searched in : ");
+                // foreach (var s in searched)
+                // {
+                //     Console.WriteLine(s);
+                // }
             }
             else
             {
