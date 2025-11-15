@@ -44,6 +44,7 @@ class Program
                     continue;
                 }
                 var execFound = false;
+                var hasExecutePermission = false;
                 var Searched = false;
                 HashSet<string> searched = [];
                 var pathSeparator = Path.PathSeparator;
@@ -60,14 +61,23 @@ class Program
                     .Format(@"{0}{1}{2}",currentdir,Path.DirectorySeparatorChar,command);
                     // logger.LogInformation(pathCommand);
                     execFound = File.Exists(pathCommand);
-                    // logger.LogInformation($"{pathCommand} Exists :"+execFound);
                     if(execFound)
+                    {
+                        var fileInfo = new FileInfo(pathCommand);
+                        var fileAttributes = fileInfo.Attributes;
+                        // logger.LogInformation("File Attributes :"+fileAttributes);
+                        // On Windows, we consider a file executable if it has a .exe, .bat, .cmd, or .com extension
+                        var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+                        hasExecutePermission = executableExtensions.Contains(fileInfo.Extension);
+                    }
+                    // logger.LogInformation($"{pathCommand} Exists :"+execFound);
+                    if(execFound && hasExecutePermission == true)
                     {
                         Console.WriteLine($"{command} is {pathCommand}");
                         break;
                     }        
                 }
-                if(!execFound)
+                if(!execFound || !hasExecutePermission)
                     Console.WriteLine($"{command}: not found");
                 continue;
             }
