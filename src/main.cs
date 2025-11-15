@@ -57,32 +57,32 @@ class Program
                     if(string.IsNullOrEmpty(dir))
                         break;
                     var currentdir = dir.TrimEnd(directorySeparator);
-                    logger.LogInformation("Current DIR :"+currentdir);
+                    // logger.LogInformation("Current DIR :"+currentdir);
                     DirectoryInfo di = new(currentdir);
-                    logger.LogInformation("Directory Exists :"+di.Exists);
+                    // logger.LogInformation("Directory Exists :"+di.Exists);
                     if(di.Exists)
                     {
                         FileInfo[] files = di.GetFiles("*"+command+"*");
-                    logger.LogInformation("Files Length :"+files.Length);
+                    // logger.LogInformation("Files Length :"+files.Length);
                     if(files.Length == 0)
                         continue;
                     else
                     {
                         foreach(var file in files)
                         {
-                            logger.LogInformation("Checking File :"+file.Name);
+                            // logger.LogInformation("Checking File :"+file.Name);
                             var fileName = Path.GetFileNameWithoutExtension(file.Name);
-                        logger.LogInformation("File Name :"+fileName);
+                        // logger.LogInformation("File Name :"+fileName);
                         if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
                         {
-                            logger.LogInformation("Matched File Name :"+fileName);
+                            // logger.LogInformation("Matched File Name :"+fileName);
                             var fileAttributes = file.Attributes;
-                            logger.LogInformation("File Attributes :"+fileAttributes);
+                            // logger.LogInformation("File Attributes :"+fileAttributes);
                             var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
-                            logger.LogInformation("File Extension :"+file.Extension);
+                            // logger.LogInformation("File Extension :"+file.Extension);
                             if(!string.IsNullOrEmpty(file.Extension))
                             {
-                                logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
+                                // logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
                                 Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
                                 execFound = true;
                                 break;
@@ -96,7 +96,6 @@ class Program
                 }
                 if(!execFound)
                     Console.WriteLine($"{command}: not found");
-                continue;
             }
             else
             {
