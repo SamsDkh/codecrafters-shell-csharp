@@ -35,7 +35,7 @@ class Program
                 var directorySeparator = Path.DirectorySeparatorChar;
                 foreach (var dir in path.Split(pathSeparator))
                 {
-                    // Console.WriteLine(dir);
+                    Console.WriteLine(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
@@ -43,11 +43,11 @@ class Program
                     {
                         if(string.IsNullOrEmpty(item))
                             break;
-                        // Console.WriteLine(item);
+                        Console.WriteLine(item);
                         var currentItem = item.TrimEnd(directorySeparator);
                         subDir += string.Format(@"{0}{1}",currentItem,directorySeparator);
                         var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
-                        // Console.WriteLine("pathCommand :"+pathCommand);
+                        Console.WriteLine("pathCommand :"+pathCommand);
                         // if(searched.Contains(pathCommand))
                         // {
                         //     Searched = true;
