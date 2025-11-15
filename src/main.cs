@@ -80,8 +80,9 @@ class Program
                             logger.LogInformation("File Attributes :"+fileAttributes);
                             var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
                             logger.LogInformation("File Extension :"+file.Extension);
-                            if(executableExtensions.Contains(file.Extension))
+                            if(!string.IsNullOrEmpty(file.Extension))
                             {
+                                logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
                                 Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
                                 execFound = true;
                                 break;
