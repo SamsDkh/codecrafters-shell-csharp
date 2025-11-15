@@ -55,8 +55,10 @@ class Program
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
-                    var pathCommand = string.Format(@"{0}{1}.exe",dir,command);
-                    // logger.LogInformation(dir);
+                    var currentdir = dir.TrimEnd(directorySeparator);
+                    var pathCommand = string
+                    .Format(@"{0}{1}{2}.exe",currentdir,Path.DirectorySeparatorChar,command);
+                    // logger.LogInformation(pathCommand);
                      execFound = File.Exists(pathCommand);
                     if(execFound)
                         {
