@@ -58,8 +58,9 @@ class Program
                     var currentdir = dir.TrimEnd(directorySeparator);
                     var pathCommand = string
                     .Format(@"{0}{1}{2}.exe",currentdir,Path.DirectorySeparatorChar,command);
-                    logger.LogInformation(pathCommand);
-                     execFound = File.Exists(pathCommand);
+                    // logger.LogInformation(pathCommand);
+                    execFound = File.Exists(pathCommand);
+                    logger.LogInformation($"{pathCommand} Exists :"+execFound);
                     if(execFound)
                     {
                         Console.WriteLine($"{command} is {pathCommand}");
