@@ -57,25 +57,39 @@ class Program
                     if(string.IsNullOrEmpty(dir))
                         break;
                     var currentdir = dir.TrimEnd(directorySeparator);
-                    var pathCommand = string
-                    .Format(@"{0}{1}{2}",currentdir,Path.DirectorySeparatorChar,command);
-                    // logger.LogInformation(pathCommand);
-                    execFound = File.Exists(pathCommand);
-                    if(execFound)
-                    {
-                        var fileInfo = new FileInfo(pathCommand);
-                        var fileAttributes = fileInfo.Attributes;
-                        // logger.LogInformation("File Attributes :"+fileAttributes);
-                        // On Windows, we consider a file executable if it has a .exe, .bat, .cmd, or .com extension
-                        var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
-                        hasExecutePermission = executableExtensions.Contains(fileInfo.Extension);
-                    }
-                    // logger.LogInformation($"{pathCommand} Exists :"+execFound);
-                    if(hasExecutePermission)
-                    {
-                        Console.WriteLine($"{command} is {pathCommand}");
+                    logger.LogInformation("Current DIR :"+currentdir);
+                    DirectoryInfo di = new(currentdir);
+                    logger.LogInformation("Directory Exists :"+di.Exists);
+                    if(!di.Exists)
                         break;
-                    }        
+                    FileInfo[] files = di.GetFiles("*"+command+"*");
+                    logger.LogInformation("Files Length :"+files.Length);
+                    if(files.Length == 0)
+                        continue;
+                    else
+                    {
+                        foreach(var file in files)
+                        {
+                            var fileName = Path.GetFileNameWithoutExtension(file.Name);
+                        logger.LogInformation("File Name :"+fileName);
+                        if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
+                        {
+                            logger.LogInformation("Matched File Name :"+fileName);
+                            var fileAttributes = file.Attributes;
+                            logger.LogInformation("File Attributes :"+fileAttributes);
+                            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+                            if(executableExtensions.Contains(file.Extension))
+                            {
+                                Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
+                                execFound = true;
+                                break;
+                            }
+                        }
+                        }
+                    }
+                    
+                    if(execFound)
+                        break;
                 }
                 if(!execFound)
                     Console.WriteLine($"{command}: not found");
