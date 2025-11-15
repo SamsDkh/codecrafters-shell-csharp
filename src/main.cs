@@ -71,13 +71,13 @@ class Program
                         hasExecutePermission = executableExtensions.Contains(fileInfo.Extension);
                     }
                     // logger.LogInformation($"{pathCommand} Exists :"+execFound);
-                    if(execFound && hasExecutePermission == true)
+                    if(hasExecutePermission)
                     {
                         Console.WriteLine($"{command} is {pathCommand}");
                         break;
                     }        
                 }
-                if(!execFound || !hasExecutePermission)
+                if(!execFound)
                     Console.WriteLine($"{command}: not found");
                 continue;
             }
