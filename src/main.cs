@@ -48,10 +48,10 @@ class Program
                 HashSet<string> searched = [];
                 var pathSeparator = Path.PathSeparator;
                 var directorySeparator = Path.DirectorySeparatorChar;
+                
                 // logger.LogInformation("PATH :"+path);
                 foreach (var dir in path.Split(pathSeparator))
                 {
-                    // logger.LogInformation(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
@@ -61,41 +61,14 @@ class Program
                     logger.LogInformation(pathCommand);
                      execFound = File.Exists(pathCommand);
                     if(execFound)
-                        {
-                            Console.WriteLine($"{command} is {pathCommand}");
-                            break;
-                        }    
-                    // foreach (var item in dir.Split(directorySeparator))
-                    // {
-                    //     if(string.IsNullOrEmpty(item))
-                    //         break;
-                    //     // logger.LogInformation(item);
-                    //     var currentItem = item.TrimEnd(directorySeparator);
-                    //     subDir += string.Format(@"{0}{1}",currentItem,directorySeparator);
-                    //     var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
-                    //     // logger.LogInformation("pathCommand :"+pathCommand);
-                    //     // if(searched.Contains(pathCommand))
-                    //     // {
-                    //     //     Searched = true;
-                    //     //     break;
-                    //     // }
-                    //     searched.Add(pathCommand);
-                    //     // logger.LogInformation(pathCommand);
-                    //     execFound = File.Exists(pathCommand);
-                    //     if(execFound)
-                    //     {
-                    //         Console.WriteLine($"{command} is {pathCommand}");
-                    //         break;
-                    //     }
-                    // }
+                    {
+                        Console.WriteLine($"{command} is {pathCommand}");
+                        break;
+                    }        
                 }
                 if(!execFound)
-                    Console.WriteLine($"{command}: not found");
-                // logger.LogInformation("Searched in : ");
-                // foreach (var s in searched)
-                // {
-                //     logger.LogInformation(s);
-                // }
+                    Console.WriteLine($"{path}/{command}: not found");
+                continue;
             }
             else
             {
