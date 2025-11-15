@@ -1,7 +1,24 @@
+
+using System;
+using System.IO;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Console;
+using System.Collections.Generic;
 class Program
 {
     static void Main()
     {
+        using var loggerFactory = LoggerFactory.Create(builder =>
+        {
+            builder
+                .AddFilter("Microsoft", LogLevel.Warning)
+                .AddFilter("System", LogLevel.Warning)
+                .AddFilter("LoggingConsoleApp.Program", LogLevel.Debug)
+                .AddConsole();
+        });
+        ILogger logger = loggerFactory.CreateLogger<Program>();
+        logger.LogInformation("Example log message");
+       
         // TODO: Uncomment the code below to pass the first stage
         while (true)
         {
@@ -43,18 +60,18 @@ class Program
                     {
                         if(string.IsNullOrEmpty(item))
                             break;
-                        Console.WriteLine(item);
+                        logger.LogInformation(item);
                         var currentItem = item.TrimEnd(directorySeparator);
                         subDir += string.Format(@"{0}{1}",currentItem,directorySeparator);
                         var pathCommand = string.Format(@"{0}{1}.exe",subDir,command);
-                        Console.WriteLine("pathCommand :"+pathCommand);
+                        logger.LogInformation("pathCommand :"+pathCommand);
                         // if(searched.Contains(pathCommand))
                         // {
                         //     Searched = true;
                         //     break;
                         // }
                         // searched.Add(pathCommand);
-                        // Console.WriteLine(pathCommand);
+                        logger.LogInformation(pathCommand);
                         execFound = File.Exists(pathCommand);
                         if(execFound)
                         {
@@ -67,11 +84,11 @@ class Program
                 }
                 if(!execFound)
                     Console.WriteLine($"{command}: not found");
-                // Console.WriteLine("Searched in : ");
-                // foreach (var s in searched)
-                // {
-                //     Console.WriteLine(s);
-                // }
+                logger.LogInformation("Searched in : ");
+                foreach (var s in searched)
+                {
+                    logger.LogInformation(s);
+                }
             }
             else
             {
