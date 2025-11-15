@@ -70,6 +70,7 @@ class Program
                     {
                         foreach(var file in files)
                         {
+                            logger.LogInformation("Checking File :"+file.Name);
                             var fileName = Path.GetFileNameWithoutExtension(file.Name);
                         logger.LogInformation("File Name :"+fileName);
                         if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
