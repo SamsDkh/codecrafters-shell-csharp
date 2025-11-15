@@ -74,16 +74,32 @@ class Program
                         // logger.LogInformation("File Name :"+fileName);
                         if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
                         {
-                            // logger.LogInformation("Matched File Name :"+fileName);
-                            var fileAttributes = file.Attributes;
-                            // logger.LogInformation("File Attributes :"+fileAttributes);
-                            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
-                            if(executableExtensions.Contains(file.Extension))
+                            var firstTwoBytes = new byte[2];
+                            using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                             {
+                                fs.Read(firstTwoBytes, 0, 2);
+                            }
+                            logger.LogInformation("First Two Bytes :"+BitConverter.ToString(firstTwoBytes));
+                            // Check for shebang (#!) for scripts
+                            if(System.Text.Encoding.UTF8.GetString(firstTwoBytes) == "MZ")
+                            {
+                                execFound = true;
                                 Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
                                 execFound = true;
                                 break;
                             }
+                            
+        
+                            // // logger.LogInformation("Matched File Name :"+fileName);
+                            // var fileAttributes = file.Attributes;
+                            // // logger.LogInformation("File Attributes :"+fileAttributes);
+                            // var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+                            // if(executableExtensions.Contains(file.Extension))
+                            // {
+                            //     Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
+                            //     execFound = true;
+                            //     break;
+                            // }
                         }
                         }
                     }
