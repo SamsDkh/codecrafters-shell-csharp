@@ -17,7 +17,6 @@ class Program
                 .AddConsole();
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
-        logger.LogInformation("Example log message");
        
         // TODO: Uncomment the code below to pass the first stage
         while (true)
@@ -52,7 +51,7 @@ class Program
                 var directorySeparator = Path.DirectorySeparatorChar;
                 foreach (var dir in path.Split(pathSeparator))
                 {
-                    Console.WriteLine(dir);
+                    logger.LogInformation(dir);
                     var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
@@ -70,7 +69,7 @@ class Program
                         //     Searched = true;
                         //     break;
                         // }
-                        // searched.Add(pathCommand);
+                        searched.Add(pathCommand);
                         logger.LogInformation(pathCommand);
                         execFound = File.Exists(pathCommand);
                         if(execFound)
