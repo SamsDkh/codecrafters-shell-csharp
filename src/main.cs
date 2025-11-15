@@ -68,7 +68,7 @@ class Program
                     }        
                 }
                 if(!execFound)
-                    Console.WriteLine($"{path}/{command}: not found");
+                    Console.WriteLine($"{command}: not found");
                 continue;
             }
             else
