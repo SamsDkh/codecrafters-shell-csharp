@@ -57,7 +57,7 @@ class Program
                         break;
                     var currentdir = dir.TrimEnd(directorySeparator);
                     var pathCommand = string
-                    .Format(@"{0}{1}{2}.exe",currentdir,Path.DirectorySeparatorChar,command);
+                    .Format(@"{0}{1}{2}",currentdir,Path.DirectorySeparatorChar,command);
                     // logger.LogInformation(pathCommand);
                     execFound = File.Exists(pathCommand);
                     logger.LogInformation($"{pathCommand} Exists :"+execFound);
