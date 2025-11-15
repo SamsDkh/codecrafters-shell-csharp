@@ -60,9 +60,9 @@ class Program
                     logger.LogInformation("Current DIR :"+currentdir);
                     DirectoryInfo di = new(currentdir);
                     logger.LogInformation("Directory Exists :"+di.Exists);
-                    if(!di.Exists)
-                        break;
-                    FileInfo[] files = di.GetFiles("*"+command+"*");
+                    if(di.Exists)
+                    {
+                        FileInfo[] files = di.GetFiles("*"+command+"*");
                     logger.LogInformation("Files Length :"+files.Length);
                     if(files.Length == 0)
                         continue;
@@ -87,7 +87,7 @@ class Program
                         }
                         }
                     }
-                    
+                    }
                     if(execFound)
                         break;
                 }
