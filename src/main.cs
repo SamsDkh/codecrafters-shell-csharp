@@ -60,7 +60,7 @@ class Program
                     .Format(@"{0}{1}{2}",currentdir,Path.DirectorySeparatorChar,command);
                     // logger.LogInformation(pathCommand);
                     execFound = File.Exists(pathCommand);
-                    logger.LogInformation($"{pathCommand} Exists :"+execFound);
+                    // logger.LogInformation($"{pathCommand} Exists :"+execFound);
                     if(execFound)
                     {
                         Console.WriteLine($"{command} is {pathCommand}");
