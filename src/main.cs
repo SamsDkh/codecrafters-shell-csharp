@@ -79,7 +79,7 @@ class Program
                             {
                                 fs.Read(firstTwoBytes, 0, 2);
                             }
-                            logger.LogInformation("First Two Bytes :"+BitConverter.ToString(firstTwoBytes));
+                            // logger.LogInformation("First Two Bytes :"+BitConverter.ToString(firstTwoBytes));
                             // Check for shebang (#!) for scripts
                             if(System.Text.Encoding.UTF8.GetString(firstTwoBytes) == "MZ")
                             {
