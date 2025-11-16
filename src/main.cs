@@ -45,74 +45,34 @@ class Program
                     continue;
                 }
                 var execFound = false;
-                var hasExecutePermission = false;
-                var Searched = false;
                 HashSet<string> searched = [];
                 var pathSeparator = Path.PathSeparator;
                 var directorySeparator = Path.DirectorySeparatorChar;
-                
-                // logger.LogInformation("PATH :"+path);
                 foreach (var dir in path.Split(pathSeparator))
                 {
-                    var subDir = string.Empty;
                     if(string.IsNullOrEmpty(dir))
                         break;
                     var currentdir = dir.TrimEnd(directorySeparator);
-                    // logger.LogInformation("Current DIR :"+currentdir);
                     DirectoryInfo di = new(currentdir);
-                    // logger.LogInformation("Directory Exists :"+di.Exists);
                     if(di.Exists)
                     {
                         FileInfo[] files = di.GetFiles("*"+command+"*");
-                    // logger.LogInformation("Files Length :"+files.Length);
                     if(files.Length == 0)
                         continue;
                     else
                     {
                         foreach(var file in files)
                         {
-                            // logger.LogInformation("Checking File :"+file.Name);
                             var fileName = Path.GetFileNameWithoutExtension(file.Name);
-                        // logger.LogInformation("File Name :"+fileName);
-                        if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
-                        {
-                            var firstTwoBytes = new byte[2];
-                            using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
+                            if(fileName == command && IsExecutable(file.FullName))
                             {
-                                fs.Read(firstTwoBytes, 0, 2);
+                                if(!searched.Contains(file.FullName))
+                                {
+                                    Console.WriteLine(file.FullName);
+                                    searched.Add(file.FullName);
+                                    execFound = true;
+                                }
                             }
-                            if(OperatingSystem.IsWindows())
-                            {
- execFound = Encoding.UTF8.GetString(firstTwoBytes) == "MZ" // Check for PE header
-                                        || Encoding.UTF8.GetString(firstTwoBytes) == "#!" // Check for shebang
-                                        || file.Extension.Equals(".bat", StringComparison.OrdinalIgnoreCase)
-                                        || file.Extension.Equals(".cmd", StringComparison.OrdinalIgnoreCase)
-                                        || file.Extension.Equals(".com", StringComparison.OrdinalIgnoreCase);                            }
-                            else
-                            {
-                                var fileInfo = new FileInfo(file.FullName);
-                                var filePermissions = fileInfo.UnixFileMode;
-                                execFound = (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
-                            }
-                           
-                            if(execFound)
-                            {
-                                Console.WriteLine($"{command} is {Path.Combine(currentdir, file.Name)}");
-                                break;
-                            }
-                            // // logger.LogInformation("Matched File Name :"+fileName);
-                            // var fileAttributes = file.Attributes;
-                            // // logger.LogInformation("File Attributes :"+fileAttributes);
-                            // var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
-                            // // logger.LogInformation("File Extension :"+file.Extension);
-                            // if(!string.IsNullOrEmpty(file.Extension))
-                            // {
-                            //     // logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
-                            //     Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
-                            //     execFound = true;
-                            //     break;
-                            // }
-                        }
                         }
                     }
                     }
@@ -135,6 +95,23 @@ class Program
                         continue;
                 }
             }
+        }
+    }
+
+
+    static bool IsExecutable(string filePath)
+    {
+        if (OperatingSystem.IsWindows())
+        {
+            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+            var fileExtension = Path.GetExtension(filePath);
+            return executableExtensions.Contains(fileExtension);
+        }
+        else
+        {
+            var fileInfo = new FileInfo(filePath);
+            var filePermissions = fileInfo.UnixFileMode;
+            return (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
         }
     }
 }
