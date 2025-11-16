@@ -4,6 +4,7 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Collections.Generic;
+using System.Text;
 class Program
 {
     static void Main()
@@ -75,18 +76,42 @@ class Program
                         // logger.LogInformation("File Name :"+fileName);
                         if(fileName.Equals(command, StringComparison.OrdinalIgnoreCase))
                         {
-                            // logger.LogInformation("Matched File Name :"+fileName);
-                            var fileAttributes = file.Attributes;
-                            // logger.LogInformation("File Attributes :"+fileAttributes);
-                            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
-                            // logger.LogInformation("File Extension :"+file.Extension);
-                            if(!string.IsNullOrEmpty(file.Extension))
+                            var firstTwoBytes = new byte[2];
+                            using (var fs = new FileStream(file.FullName, FileMode.Open, FileAccess.Read))
                             {
-                                // logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
-                                Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
-                                execFound = true;
+                                fs.Read(firstTwoBytes, 0, 2);
+                            }
+                            if(OperatingSystem.IsWindows())
+                            {
+ execFound = Encoding.UTF8.GetString(firstTwoBytes) == "MZ" // Check for PE header
+                                        || Encoding.UTF8.GetString(firstTwoBytes) == "#!" // Check for shebang
+                                        || file.Extension.Equals(".bat", StringComparison.OrdinalIgnoreCase)
+                                        || file.Extension.Equals(".cmd", StringComparison.OrdinalIgnoreCase)
+                                        || file.Extension.Equals(".com", StringComparison.OrdinalIgnoreCase);                            }
+                            else
+                            {
+                                var fileInfo = new FileInfo(file.FullName);
+                                var filePermissions = fileInfo.UnixFileMode;
+                                execFound = (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
+                            }
+                           
+                            if(execFound)
+                            {
+                                Console.WriteLine($"{command} is {Path.Combine(currentdir, file.Name)}");
                                 break;
                             }
+                            // // logger.LogInformation("Matched File Name :"+fileName);
+                            // var fileAttributes = file.Attributes;
+                            // // logger.LogInformation("File Attributes :"+fileAttributes);
+                            // var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+                            // // logger.LogInformation("File Extension :"+file.Extension);
+                            // if(!string.IsNullOrEmpty(file.Extension))
+                            // {
+                            //     // logger.LogInformation("File Extension Check :"+executableExtensions.Contains(file.Extension));
+                            //     Console.WriteLine($"{command} is {Path.Combine(currentdir, fileName)}");
+                            //     execFound = true;
+                            //     break;
+                            // }
                         }
                         }
                     }
