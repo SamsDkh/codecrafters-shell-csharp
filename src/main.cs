@@ -18,7 +18,8 @@ class Program
                 .AddConsole();
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
-       
+                   var path = Environment.GetEnvironmentVariable("PATH");
+                   
         while (true)
         {
            Console.Write("$ ");
@@ -31,6 +32,7 @@ class Program
             if(prompt.StartsWith("type "))
             {
                 var command = prompt.Substring(5);
+                var execFound = false;
                 if(command == "echo" 
                 || command == "type"
                 || command == "exit")
@@ -38,17 +40,45 @@ class Program
                     Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
                     continue;
                 }
-                var path = Environment.GetEnvironmentVariable("PATH");
+
                 if(string.IsNullOrEmpty(path))
                 {
                     Console.WriteLine($"{command}: not found");
                     continue;
                 }
-                var execFound = false;
-                HashSet<string> searched = [];
-                var pathSeparator = Path.PathSeparator;
+                var fileInfo = FindCommandIntoPath(command, path);
+                if(fileInfo != null)
+                {
+                    execFound = IsExecutable(fileInfo.FullName);
+                    if(execFound)
+                        Console.WriteLine($"{command} is {fileInfo.FullName}");
+                }
+                if(!execFound)
+                    Console.WriteLine($"{command}: not found");
+            }
+            else
+            {
+                //Check if prompt contains space if yes split get every args
+                //Check if prompt is a file and executable then try to execute it with args
+                switch(prompt)
+                {
+                    case "exit 0":
+                        return;
+                    case "":
+                        continue;
+                    default:
+                        Console.WriteLine($"{prompt}: command not found");
+                        continue;
+                }
+            }
+        }
+    }
+
+    static FileInfo? FindCommandIntoPath(string command, string path)
+    {
+        var pathSeparator = Path.PathSeparator;
                 var directorySeparator = Path.DirectorySeparatorChar;
-                foreach (var dir in path.Split(pathSeparator))
+       foreach (var dir in path.Split(pathSeparator))
                 {
                     if(string.IsNullOrEmpty(dir))
                         break;
@@ -66,48 +96,22 @@ class Program
                             var fileName = Path.GetFileNameWithoutExtension(file.Name);
                             if(fileName == command && IsExecutable(file.FullName))
                             {
-                                if(!searched.Contains(file.FullName))
-                                {
-                                    Console.WriteLine(file.FullName);
-                                    searched.Add(file.FullName);
-                                    execFound = true;
-                                }
-                            }
+                                return file;
+                            }   
                         }
                     }
                     }
-                    if(execFound)
-                        break;
-                }
-                if(!execFound)
-                    Console.WriteLine($"{command}: not found");
-            }
-            else
-            {
-                switch(prompt)
-                {
-                    case "exit 0":
-                        return;
-                    case "":
-                        continue;
-                    default:
-                        Console.WriteLine($"{prompt}: command not found");
-                        continue;
-                }
-            }
-        }
-    }
-
-    static bool FindAnExecutableIntoPath(string command)
-    {
-        return false;
+                } 
+                
+        return null;
     }
 
     static bool IsExecutable(string filePath)
     {
         if (OperatingSystem.IsWindows())
         {
-            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) { ".exe", ".bat", ".cmd", ".com" };
+            var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
+            { ".exe", ".bat", ".cmd", ".com" };
             var fileExtension = Path.GetExtension(filePath);
             return executableExtensions.Contains(fileExtension);
         }
