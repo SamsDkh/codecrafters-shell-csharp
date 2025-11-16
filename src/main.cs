@@ -98,6 +98,10 @@ class Program
         }
     }
 
+    static bool FindAnExecutableIntoPath(string command)
+    {
+        return false;
+    }
 
     static bool IsExecutable(string filePath)
     {
@@ -113,5 +117,10 @@ class Program
             var filePermissions = fileInfo.UnixFileMode;
             return (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
         }
+    }
+
+    static void ExecuteCommand(string command, string[] args)
+    {
+        
     }
 }
