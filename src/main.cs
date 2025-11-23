@@ -5,6 +5,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Console;
 using System.Collections.Generic;
 using System.Text;
+using System.Diagnostics;
+
 class Program
 {
     static void Main()
@@ -18,8 +20,8 @@ class Program
                 .AddConsole();
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
-                   var path = Environment.GetEnvironmentVariable("PATH");
-           var command = string.Empty;        
+        var path = Environment.GetEnvironmentVariable("PATH");
+        var command = string.Empty;        
         while (true)
         {
            Console.Write("$ ");
@@ -60,7 +62,7 @@ class Program
             {
                 //Check if prompt contains space if yes split get every args
                 //Check if prompt is a file and executable then try to execute it with args
-                Console.WriteLine($"prompt : {prompt}");
+                // Console.WriteLine($"prompt : {prompt}");
                 switch(prompt)
                 {
                     case "exit 0":
@@ -69,12 +71,27 @@ class Program
                         continue;
                     default:
                     {
-                         var fileInfo = FindCommandIntoPath(command, path);
+                        var cmd = ExtractCommandFromPrompt(prompt);
+                        var fileInfo = FindCommandIntoPath(cmd, path);
                         if(fileInfo != null)
                         {
                             execFound = IsExecutable(fileInfo.FullName);
                             if(execFound)
-                                Console.WriteLine($"{prompt}");
+                            {
+                                var args = prompt.Substring(cmd.Length, prompt.Length-cmd.Length).TrimStart();
+                                if(args.Length > 0)
+                                {
+                                    // Console.WriteLine($"Executing {fileInfo.Name} with args {args}");
+                                     ProcessStartInfo startInfo = new()
+                                     {
+                                       FileName =  fileInfo.Name,
+                                       Arguments =  args,
+                                       UseShellExecute = false,
+                                       CreateNoWindow = true
+                                     };      
+                                    Process.Start(startInfo);
+                                }
+                            }
                         }
                         if(!execFound)
                             Console.WriteLine($"{command}: not found");   
@@ -83,6 +100,52 @@ class Program
                 }
             }
         }
+    }
+
+    static string ExtractCommandFromPrompt(string prompt)
+    {
+        if(string.IsNullOrEmpty(prompt))
+            return prompt;
+        string command = string.Empty;
+        foreach(char c in prompt)
+        {
+            if(char.IsWhiteSpace(c))
+                break;
+            command += c;
+        }
+        // Console.WriteLine($"Extracted command : {command}");
+        return command;
+    }
+
+    static List<string> ExctractArgsFromPrompt(string prompt)
+    {
+        var promptStartTrimmed = prompt.TrimStart();
+        Console.WriteLine($"ExctractArgsFromPrompt : {promptStartTrimmed}");
+        if(string.IsNullOrEmpty(promptStartTrimmed))
+            return [];
+        var promptLength = promptStartTrimmed.Length;
+        var promptLengthNoSpace = promptStartTrimmed.Trim().Length;
+        List<string> args = [];
+        var currentStr = "";
+        int argsIndex = 0;
+        for(int i = 0; i<promptLength;i++)
+        {
+            currentStr += promptStartTrimmed[i];
+            Console.WriteLine($"current string : {currentStr}");
+            if(char.IsWhiteSpace(promptStartTrimmed[i]) || i == promptLength-1)
+            {
+                args.Add(currentStr.Trim());
+                Console.WriteLine($"current string {args[argsIndex]} to args at index {argsIndex}");
+                currentStr = "";
+                argsIndex++;
+            }
+        }
+
+        foreach(string arg in args)
+        {
+            Console.WriteLine($"Extracted arg : {arg}");
+        }
+        return args;
     }
 
     static bool FindCommandAndCheckIfExecutable(string command)
