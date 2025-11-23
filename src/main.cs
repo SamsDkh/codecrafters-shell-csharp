@@ -24,22 +24,23 @@ class Program
         var command = string.Empty;        
         while (true)
         {
-           Console.Write("$ ");
+            Console.Write("$ ");
             var prompt = Console.ReadLine();
             var execFound = false;
-            if(prompt.StartsWith("echo "))
+            var promptTrimmed = prompt.TrimStart();
+            if(promptTrimmed.StartsWith("echo "))
             {
-                Console.WriteLine($"{prompt.Substring(5)}");
+                Console.WriteLine($"{promptTrimmed.Substring(5)}");
                 continue;
             }
-            if(prompt.StartsWith("type "))
+            if(promptTrimmed.StartsWith("type "))
             {
-                command = prompt.Substring(5);
+                command = promptTrimmed.Substring(5);
                 if(command == "echo" 
                 || command == "type"
                 || command == "exit")
                 {
-                    Console.WriteLine($"{prompt.Substring(5)} is a shell builtin");
+                    Console.WriteLine($"{promptTrimmed.Substring(5)} is a shell builtin");
                     continue;
                 }
 
@@ -60,7 +61,7 @@ class Program
             }
             else
             {
-                switch(prompt)
+                switch(promptTrimmed)
                 {
                     case "exit":
                         return;
@@ -68,7 +69,7 @@ class Program
                         continue;
                     default:
                     {
-                        var cmd = ExtractCommandFromPrompt(prompt.TrimStart());
+                        var cmd = ExtractCommandFromPrompt(promptTrimmed);
                         // Console.WriteLine($"cmd :k{cmd}");
                         var fileInfo = FindCommandIntoPath(cmd, path);
                         if(fileInfo != null)
@@ -76,7 +77,7 @@ class Program
                             execFound = IsExecutable(fileInfo.FullName);
                             if(execFound)
                             {
-                                var args = prompt.Substring(cmd.Length, prompt.Length-cmd.Length).TrimStart();
+                                var args = promptTrimmed.Substring(cmd.Length, prompt.Length-cmd.Length);
                                 if(args.Length > 0)
                                 {
                                     // Console.WriteLine($"Executing {fileInfo.Name} with args {args}");
@@ -85,7 +86,7 @@ class Program
                                        FileName =  fileInfo.Name,
                                        Arguments =  args,
                                        RedirectStandardOutput = true,
-                                        RedirectStandardError = true,
+                                      RedirectStandardError = true,
                                        UseShellExecute = false,
                                        CreateNoWindow = true
                                      };      
@@ -113,15 +114,7 @@ class Program
     {
         if(string.IsNullOrEmpty(prompt))
             return prompt;
-        string command = string.Empty;
-        foreach(char c in prompt)
-        {
-            if(char.IsWhiteSpace(c))
-                break;
-            command += c;
-        }
-        // Console.WriteLine($"Extracted command : {command}");
-        return command.TrimEnd();
+        return prompt.Split(" ")[0].TrimEnd();
     }
 
     static List<string> ExctractArgsFromPrompt(string prompt)
