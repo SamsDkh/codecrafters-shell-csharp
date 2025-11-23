@@ -60,9 +60,6 @@ class Program
             }
             else
             {
-                //Check if prompt contains space if yes split get every args
-                //Check if prompt is a file and executable then try to execute it with args
-                // Console.WriteLine($"prompt : {prompt}");
                 switch(prompt)
                 {
                     case "exit 0":
@@ -82,14 +79,14 @@ class Program
                                 if(args.Length > 0)
                                 {
                                     // Console.WriteLine($"Executing {fileInfo.Name} with args {args}");
-                                     ProcessStartInfo startInfo = new()
-                                     {
-                                       FileName =  fileInfo.Name,
-                                       Arguments =  args,
-                                       UseShellExecute = false,
-                                       CreateNoWindow = true
-                                     };      
-                                    Process.Start(startInfo);
+                                    //  ProcessStartInfo startInfo = new()
+                                    //  {
+                                    //    FileName =  fileInfo.Name,
+                                    //    Arguments =  args,
+                                    //    UseShellExecute = false,
+                                    //    CreateNoWindow = true
+                                    //  };      
+                                    Process.Start(fileInfo.Name,args);
                                 }
                             }
                         }
