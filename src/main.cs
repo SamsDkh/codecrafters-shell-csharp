@@ -62,7 +62,7 @@ class Program
             {
                 switch(prompt)
                 {
-                    case "exit 0":
+                    case "exit":
                         return;
                     case "":
                         continue;
