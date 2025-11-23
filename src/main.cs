@@ -60,7 +60,7 @@ class Program
             {
                 //Check if prompt contains space if yes split get every args
                 //Check if prompt is a file and executable then try to execute it with args
-                Console.WriteLine($"{prompt}");
+                Console.WriteLine($"prompt : {prompt}");
                 switch(prompt)
                 {
                     case "exit 0":
