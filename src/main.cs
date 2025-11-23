@@ -96,10 +96,11 @@ class Program
                                     Console.Error.Write(process.StandardError.ReadToEnd());
 
                                     process.WaitForExit();                                }
-                            }
+                                }
+                                if(!execFound)
+                            Console.WriteLine($"{cmd}: not found");   
                         }
-                        if(!execFound)
-                            Console.WriteLine($"{command}: not found");   
+                        
                     }
                     continue;
                 }
