@@ -79,15 +79,23 @@ class Program
                                 if(args.Length > 0)
                                 {
                                     // Console.WriteLine($"Executing {fileInfo.Name} with args {args}");
-                                    //  ProcessStartInfo startInfo = new()
-                                    //  {
-                                    //    FileName =  fileInfo.Name,
-                                    //    Arguments =  args,
-                                    //    UseShellExecute = false,
-                                    //    CreateNoWindow = true
-                                    //  };      
-                                    Process.Start(fileInfo.Name,args);
-                                }
+                                     ProcessStartInfo startInfo = new()
+                                     {
+                                       FileName =  fileInfo.Name,
+                                       Arguments =  args,
+                                       RedirectStandardOutput = true,
+                                        RedirectStandardError = true,
+                                       UseShellExecute = false,
+                                       CreateNoWindow = true
+                                     };      
+                                    var process = new Process { StartInfo = startInfo };
+                                    process.Start();
+
+                                    // Print stdout
+                                    Console.Write(process.StandardOutput.ReadToEnd());
+                                    Console.Error.Write(process.StandardError.ReadToEnd());
+
+                                    process.WaitForExit();                                }
                             }
                         }
                         if(!execFound)
