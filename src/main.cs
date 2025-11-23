@@ -114,7 +114,7 @@ class Program
             command += c;
         }
         // Console.WriteLine($"Extracted command : {command}");
-        return command;
+        return command.TrimEnd();
     }
 
     static List<string> ExctractArgsFromPrompt(string prompt)
