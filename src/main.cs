@@ -68,7 +68,7 @@ class Program
                         continue;
                     default:
                     {
-                        var cmd = ExtractCommandFromPrompt(prompt);
+                        var cmd = ExtractCommandFromPrompt(prompt.TrimStart());
                         var fileInfo = FindCommandIntoPath(cmd, path);
                         if(fileInfo != null)
                         {
@@ -98,7 +98,7 @@ class Program
                                     process.WaitForExit();                                }
                                 }
                                 if(!execFound)
-                            Console.WriteLine($"{cmd}: not found");   
+                                    Console.WriteLine($"{cmd}: not found");   
                         }
                         
                     }
