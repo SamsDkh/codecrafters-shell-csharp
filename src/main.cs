@@ -19,11 +19,12 @@ class Program
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
                    var path = Environment.GetEnvironmentVariable("PATH");
-                   
+           var command = string.Empty;        
         while (true)
         {
            Console.Write("$ ");
             var prompt = Console.ReadLine();
+            var execFound = false;
             if(prompt.StartsWith("echo "))
             {
                 Console.WriteLine($"{prompt.Substring(5)}");
@@ -31,8 +32,7 @@ class Program
             }
             if(prompt.StartsWith("type "))
             {
-                var command = prompt.Substring(5);
-                var execFound = false;
+                command = prompt.Substring(5);
                 if(command == "echo" 
                 || command == "type"
                 || command == "exit")
@@ -42,19 +42,19 @@ class Program
                 }
 
                 if(string.IsNullOrEmpty(path))
-                {
                     Console.WriteLine($"{command}: not found");
-                    continue;
-                }
-                var fileInfo = FindCommandIntoPath(command, path);
-                if(fileInfo != null)
+                else
                 {
-                    execFound = IsExecutable(fileInfo.FullName);
-                    if(execFound)
-                        Console.WriteLine($"{command} is {fileInfo.FullName}");
+                    var fileInfo = FindCommandIntoPath(command, path);
+                    if(fileInfo != null)
+                    {
+                        execFound = IsExecutable(fileInfo.FullName);
+                        if(execFound)
+                            Console.WriteLine($"{command} is {fileInfo.FullName}");
+                    }
+                    if(!execFound)
+                        Console.WriteLine($"{command}: not found");
                 }
-                if(!execFound)
-                    Console.WriteLine($"{command}: not found");
             }
             else
             {
@@ -67,17 +67,32 @@ class Program
                     case "":
                         continue;
                     default:
-                        Console.WriteLine($"{prompt}: command not found");
-                        continue;
+                    {
+                         var fileInfo = FindCommandIntoPath(command, path);
+                        if(fileInfo != null)
+                        {
+                            execFound = IsExecutable(fileInfo.FullName);
+                            if(execFound)
+                                Console.WriteLine($"{prompt}");
+                        }
+                        if(!execFound)
+                            Console.WriteLine($"{command}: not found");   
+                    }
+                    continue;
                 }
             }
         }
     }
 
+    static bool FindCommandAndCheckIfExecutable(string command)
+    {
+        return false;
+    }
+
     static FileInfo? FindCommandIntoPath(string command, string path)
     {
         var pathSeparator = Path.PathSeparator;
-                var directorySeparator = Path.DirectorySeparatorChar;
+        var directorySeparator = Path.DirectorySeparatorChar;
        foreach (var dir in path.Split(pathSeparator))
                 {
                     if(string.IsNullOrEmpty(dir))
@@ -108,23 +123,21 @@ class Program
 
     static bool IsExecutable(string filePath)
     {
-        if (OperatingSystem.IsWindows())
+        if (!OperatingSystem.IsWindows())
         {
+             var fileInfo = new FileInfo(filePath);
+            var filePermissions = fileInfo.UnixFileMode;
+            return (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
+        }
+      
             var executableExtensions = new HashSet<string>(StringComparer.OrdinalIgnoreCase) 
             { ".exe", ".bat", ".cmd", ".com" };
             var fileExtension = Path.GetExtension(filePath);
             return executableExtensions.Contains(fileExtension);
-        }
-        else
-        {
-            var fileInfo = new FileInfo(filePath);
-            var filePermissions = fileInfo.UnixFileMode;
-            return (filePermissions & (UnixFileMode.UserExecute | UnixFileMode.GroupExecute | UnixFileMode.OtherExecute)) != 0;
-        }
     }
 
     static void ExecuteCommand(string command, string[] args)
     {
-        
+        Console.WriteLine(command);
     }
 }
