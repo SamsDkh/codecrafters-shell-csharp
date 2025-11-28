@@ -21,7 +21,13 @@ class Program
         });
         ILogger logger = loggerFactory.CreateLogger<Program>();
         var path = Environment.GetEnvironmentVariable("PATH");
-        var command = string.Empty;        
+        var command = string.Empty;
+        List<string> commands = [
+            "echo",
+            "type",
+            "exit",
+            "pwd"
+        ];        
         while (true)
         {
             Console.Write("$ ");
@@ -36,11 +42,9 @@ class Program
             if(promptTrimmed.StartsWith("type "))
             {
                 command = promptTrimmed.Substring(5);
-                if(command == "echo" 
-                || command == "type"
-                || command == "exit")
+                if(commands.Contains(command))
                 {
-                    Console.WriteLine($"{promptTrimmed.Substring(5)} is a shell builtin");
+                    Console.WriteLine($"{command} is a shell builtin");
                     continue;
                 }
 
@@ -63,6 +67,9 @@ class Program
             {
                 switch(promptTrimmed)
                 {
+                    case "pwd":
+                        Console.WriteLine(Directory.GetCurrentDirectory());
+                        break;
                     case "exit":
                         return;
                     case "":
@@ -104,7 +111,7 @@ class Program
                         if(fileInfo == null || !execFound)
                             Console.WriteLine($"{cmd}: not found");   
                     }
-                    continue;
+                    break;
                 }
             }
         }
