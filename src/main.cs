@@ -73,7 +73,7 @@ class Program
                 {
                     string dir = @command.ToString();
                     Directory.SetCurrentDirectory(dir);
-                    continue;
+                    break;
                 }
                 Console.WriteLine($"cd: {command}: No such file or directory");
             }
