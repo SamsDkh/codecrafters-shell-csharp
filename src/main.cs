@@ -26,7 +26,8 @@ class Program
             "echo",
             "type",
             "exit",
-            "pwd"
+            "pwd",
+            "cd"
         ];        
         while (true)
         {
@@ -36,12 +37,13 @@ class Program
             var promptTrimmed = prompt.TrimStart();
             if(promptTrimmed.StartsWith("echo "))
             {
-                Console.WriteLine($"{promptTrimmed.Substring(5)}");
+                command = promptTrimmed.Substring(5).TrimEnd();
+                Console.WriteLine($"{command}");
                 continue;
             }
             if(promptTrimmed.StartsWith("type "))
             {
-                command = promptTrimmed.Substring(5);
+                command = promptTrimmed.Substring(5).TrimEnd();
                 if(commands.Contains(command))
                 {
                     Console.WriteLine($"{command} is a shell builtin");
@@ -62,6 +64,18 @@ class Program
                     if(!execFound)
                         Console.WriteLine($"{command}: not found");
                 }
+            }
+            if(promptTrimmed.StartsWith("cd "))
+            {
+                command = promptTrimmed.Substring(5).TrimEnd();
+                var doesDirectoryExist = Directory.Exists(command);
+                if(doesDirectoryExist)
+                {
+                    string dir = @command.ToString();
+                    Directory.SetCurrentDirectory(dir);
+                    continue;
+                }
+                Console.WriteLine($"cd: {command}: No such file or directory");
             }
             else
             {

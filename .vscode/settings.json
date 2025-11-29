@@ -7,7 +7,7 @@
     "editor.suggestOnTriggerCharacters": true,
     "editor.acceptSuggestionOnEnter": "smart",
     "editor.acceptSuggestionOnCommitCharacter": true,
-    "editor.inlineSuggest.enabled": true,
+    "editor.inlineSuggest.enabled": false,
     "editor.wordBasedSuggestions": "allDocuments",
     "editor.snippetSuggestions": "none"
 }
