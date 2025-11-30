@@ -69,13 +69,11 @@ class Program
             {
                 command = promptTrimmed.Substring(5);
                 var rootDirectory = Directory.GetDirectoryRoot(command);
-                // logger.LogInformation(rootDirectory+command.ToString());
+                logger.LogInformation($"root : {rootDirectory+command.ToString()}");
                 string dir = @rootDirectory+command.ToString();
                 var doesDirectoryExist = Directory.Exists(dir);
                 if(doesDirectoryExist)
-                {
                     Directory.SetCurrentDirectory(dir);
-                }
                 else
                     Console.WriteLine($"cd: {command}: No such file or directory");
             }
