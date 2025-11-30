@@ -73,9 +73,9 @@ class Program
                 {
                     string dir = @command.ToString();
                     Directory.SetCurrentDirectory(dir);
-                    break;
                 }
-                Console.WriteLine($"cd: {command}: No such file or directory");
+                else
+                    Console.WriteLine($"cd: {command}: No such file or directory");
             }
             else
             {
