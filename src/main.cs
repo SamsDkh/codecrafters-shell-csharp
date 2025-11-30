@@ -35,15 +35,15 @@ class Program
             var prompt = Console.ReadLine();
             var execFound = false;
             var promptTrimmed = prompt.TrimStart();
-            if(promptTrimmed.StartsWith("echo "))
+            if(promptTrimmed.StartsWith("echo"))
             {
-                command = promptTrimmed.Substring(5).TrimEnd();
+                command = promptTrimmed.Substring(5).Trim();
                 Console.WriteLine($"{command}");
                 continue;
             }
-            else if(promptTrimmed.StartsWith("type "))
+            else if(promptTrimmed.StartsWith("type"))
             {
-                command = promptTrimmed.Substring(5).TrimEnd();
+                command = promptTrimmed.Substring(4).Trim();
                 if(commands.Contains(command))
                 {
                     Console.WriteLine($"{command} is a shell builtin");
@@ -67,7 +67,7 @@ class Program
             }
             else if(promptTrimmed.StartsWith("cd "))
             {
-                command = promptTrimmed.Substring(4);
+                command = promptTrimmed.Substring(4).Trim();
                 var rootDirectory = Directory.GetDirectoryRoot(command);
                 // logger.LogInformation($"root : {rootDirectory+command.ToString()}");
                 string dir = @rootDirectory+command.ToString();
