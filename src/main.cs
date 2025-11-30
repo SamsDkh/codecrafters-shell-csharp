@@ -75,7 +75,7 @@ class Program
                 if(doesDirectoryExist)
                     Directory.SetCurrentDirectory(dir);
                 else
-                    Console.WriteLine($"cd: {command}: No such file or directory");
+                    Console.WriteLine($"cd: {dir}: No such file or directory");
             }
             else
             {
