@@ -67,11 +67,13 @@ class Program
             }
             if(promptTrimmed.StartsWith("cd "))
             {
-                command = promptTrimmed.Substring(5).TrimEnd();
-                var doesDirectoryExist = Directory.Exists(command);
+                command = promptTrimmed.Substring(5);
+                var rootDirectory = Directory.GetDirectoryRoot(command);
+                logger.LogInformation(rootDirectory+command.ToString());
+                string dir = @rootDirectory+command.ToString();
+                var doesDirectoryExist = Directory.Exists(dir);
                 if(doesDirectoryExist)
                 {
-                    string dir = @command.ToString();
                     Directory.SetCurrentDirectory(dir);
                 }
                 else
