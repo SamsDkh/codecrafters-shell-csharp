@@ -41,7 +41,7 @@ class Program
                 Console.WriteLine($"{command}");
                 continue;
             }
-            if(promptTrimmed.StartsWith("type "))
+            else if(promptTrimmed.StartsWith("type "))
             {
                 command = promptTrimmed.Substring(5).TrimEnd();
                 if(commands.Contains(command))
@@ -61,11 +61,11 @@ class Program
                         if(execFound)
                             Console.WriteLine($"{command} is {fileInfo.FullName}");
                     }
-                    if(!execFound)
+                    else
                         Console.WriteLine($"{command}: not found");
                 }
             }
-            if(promptTrimmed.StartsWith("cd "))
+            else if(promptTrimmed.StartsWith("cd "))
             {
                 command = promptTrimmed.Substring(4);
                 var rootDirectory = Directory.GetDirectoryRoot(command);
@@ -195,9 +195,7 @@ class Program
                         {
                             var fileName = Path.GetFileNameWithoutExtension(file.Name);
                             if(fileName == command && IsExecutable(file.FullName))
-                            {
                                 return file;
-                            }   
                         }
                     }
                     }
