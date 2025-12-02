@@ -77,12 +77,12 @@ class Program
                 {
                     var rootDirectory = Directory.GetDirectoryRoot(command);
                     // logger.LogInformation($"root : {rootDirectory+command.ToString()}");
-                    string dir = @rootDirectory+command.ToString();
-                    var doesDirectoryExist = Directory.Exists(dir);
+                    currentDirectory = @rootDirectory+command;
+                    var doesDirectoryExist = Directory.Exists(currentDirectory);
                     if(doesDirectoryExist)
-                        Directory.SetCurrentDirectory(dir);
+                        Directory.SetCurrentDirectory(currentDirectory);
                     else
-                        Console.WriteLine($"cd: {dir}: No such file or directory");
+                        Console.WriteLine($"cd: {command}: No such file or directory");
                 }
                 
             }
