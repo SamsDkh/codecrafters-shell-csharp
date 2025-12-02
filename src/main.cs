@@ -67,15 +67,24 @@ class Program
             }
             else if(promptTrimmed.StartsWith("cd "))
             {
-                command = promptTrimmed.Substring(4).Trim();
-                var rootDirectory = Directory.GetDirectoryRoot(command);
-                // logger.LogInformation($"root : {rootDirectory+command.ToString()}");
-                string dir = @rootDirectory+command.ToString();
-                var doesDirectoryExist = Directory.Exists(dir);
-                if(doesDirectoryExist)
-                    Directory.SetCurrentDirectory(dir);
+                command = promptTrimmed.Substring(3).Trim();
+                // logger.LogInformation($"command : {command}");
+                var currentDirectory = Directory.GetCurrentDirectory();
+                // logger.LogInformation($"currentDirectory : {currentDirectory}");
+                if(command.Equals("./"))
+                    Directory.SetCurrentDirectory(currentDirectory);
                 else
-                    Console.WriteLine($"cd: {dir}: No such file or directory");
+                {
+                    var rootDirectory = Directory.GetDirectoryRoot(command);
+                    // logger.LogInformation($"root : {rootDirectory+command.ToString()}");
+                    string dir = @rootDirectory+command.ToString();
+                    var doesDirectoryExist = Directory.Exists(dir);
+                    if(doesDirectoryExist)
+                        Directory.SetCurrentDirectory(dir);
+                    else
+                        Console.WriteLine($"cd: {dir}: No such file or directory");
+                }
+                
             }
             else
             {
